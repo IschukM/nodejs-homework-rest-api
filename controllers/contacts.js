@@ -1,14 +1,8 @@
 const contacts = require("../models/contacts.js");
+
 const { HttpError } = require("../helpers");
-const Joi = require("joi");
 
 const { ctrlWrapper } = require("../decorators");
-
-const addSchema = Joi.object({
-  name: Joi.string().required(),
-  email: Joi.string().required(),
-  phone: Joi.string().required(),
-});
 
 const getAll = async (req, res, next) => {
   const result = await contacts.listContacts();
@@ -25,11 +19,6 @@ const getContactById = async (req, res, next) => {
 };
 
 const addContact = async (req, res) => {
-  console.log(req.body);
-  const { error } = addSchema.validate(req.body);
-  if (error) {
-    throw HttpError(400, error.message);
-  }
   const result = await contacts.addContact(req.body);
   res.status(201).json(result);
 };
