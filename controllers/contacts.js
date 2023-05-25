@@ -1,11 +1,11 @@
-const contacts = require("../models/contacts.js");
+const { Contact } = require("../models/contacts.js");
 
 const { HttpError } = require("../helpers");
 
 const { ctrlWrapper } = require("../decorators");
 
 const getAll = async (req, res, next) => {
-  const result = await contacts.listContacts();
+  const result = await Contact.find({}, "-createdAt -updatedAt");
   res.json(result);
 };
 
