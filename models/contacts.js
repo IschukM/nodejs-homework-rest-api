@@ -1,39 +1,56 @@
 const { Schema, model } = require("mongoose");
 const Joi = require("joi");
-
 const { handleMongooseError } = require("../helpers");
-const dateRegexp = /^\d{2}-\d{2}-\d{4}$/;
 
-const bookSchema = new Schema(
+const contactSchema = new Schema(
   {
     name: {
       type: String,
-      required: [true, "Set name for contact"],
+      required: [true, "Enter name for contact"],
     },
     email: {
       type: String,
+      required: [true, "missing required fields"],
     },
     phone: {
       type: String,
+      required: [true, "missing required fields"],
     },
     favorite: {
       type: Boolean,
       default: false,
     },
-
-    date: {
-      type: String,
-      // 16-10-2009
-      match: dateRegexp,
-      required: true,
-    },
   },
   { versionKey: false, timestamps: true }
 );
 
-// bookSchema.post("save", handleMongooseError);
-const Contact = model("contact", bookSchema);
+const addSchema = Joi.object({
+  name: Joi.string()
+    .min(5)
+    .required()
+    .messages({ "any.required": "missing required fields" }),
+  email: Joi.string()
+    .email()
+    .required()
+    .messages({ "any.required": "missing required fields" }),
+  phone: Joi.string()
+    .required()
+    .messages({ "any.required": "missing required fields" }),
+  favorite: Joi.boolean(),
+});
 
-module.exports = {
-  Contact,
+const updateFavoriteSchema = Joi.object({
+  favorite: Joi.boolean()
+    .required()
+    .messages({ "any.required": "missing field favorite" }),
+});
+
+const schemas = {
+  addSchema,
+  updateFavoriteSchema,
 };
+
+const Contact = model("contact", contactSchema);
+contactSchema.post("save", handleMongooseError);
+
+module.exports = { Contact, schemas };
