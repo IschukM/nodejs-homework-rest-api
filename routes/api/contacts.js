@@ -1,24 +1,29 @@
 const express = require("express");
-
+const  authenticate  = require("../../helpers/authenticate");
 const router = express.Router();
 
 const ctrl = require("../../controllers/contacts");
 const { validateBody } = require("../../decorators");
 const { schemas } = require("../../models/contacts");
-const { isValidId } = require("../../helpers");
+const { isValidId,  } = require("../../helpers");
 
-router.get("/", ctrl.getAll);
+router.get("/", authenticate, ctrl.getAll);
 
-router.get("/:contactId", isValidId, ctrl.getContactById);
+router.get("/:contactId", authenticate, isValidId, ctrl.getContactById);
 
-router.post("/", validateBody(schemas.addSchema), ctrl.addContact);
+router.post("/", authenticate, validateBody(schemas.addSchema), ctrl.addContact);
 
-router.put("/:contactId",isValidId, validateBody(schemas.addSchema), ctrl.updateContact);
+router.put(
+  "/:contactId",authenticate,
+  isValidId,
+  validateBody(schemas.addSchema),
+  ctrl.updateContact
+);
 
-router.delete("/:contactId",isValidId, ctrl.removeContact);
+router.delete("/:contactId",authenticate, isValidId, ctrl.removeContact);
 
 router.patch(
-  "/:contactId/favorite",
+  "/:contactId/favorite",authenticate,
   isValidId,
   validateBody(schemas.updateFavoriteSchema),
   ctrl.updateStatusContact
