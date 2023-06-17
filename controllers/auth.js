@@ -33,7 +33,7 @@ const register = async (req, res) => {
     avatarUrl,
   });
 
-  const link = `http://localhost:${PORT}/api/auth/verify/${verificationCode}`;
+  const link = `http://localhost:${PORT}/users/verify/${verificationCode}`;
 
   const verifyEmail = {
     to: email,
@@ -78,7 +78,7 @@ const resendVerifyEmail = async (req, res) => {
     throw HttpError(400, "Email already verified");
   }
 
-  const link = `http://localhost:${PORT}/api/auth/verify/${user.verificationCode}`;
+  const link = `http://localhost:${PORT}/users/verify/${user.verificationCode}`;
 
   const verifyEmail = {
     to: email,
